@@ -13,7 +13,7 @@ message GetStatsRequest {
 }
 
 message GetStatsResponse {
-  int32 commits = 1;
+  int32 commits       = 1;
   int32 pull_requests = 2;
-  int32 issues = 3;
+  int32 issues        = 3;
 }
