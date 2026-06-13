@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: cmd/gateway/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - calendar-service
+      - github-service
+      - slack-service
+      - scoring-engine
+      - notification-service
+
+  calendar-service:
+    build:
+      context: .
+      dockerfile: cmd/calendar-service/Dockerfile
+    environment:
+      - DB_URL=postgres://user:pass@db:5432/calendar
+
+  github-service:
+    build:
+      context: .
+      dockerfile: cmd/github-service/Dockerfile
+
+  slack-service:
+    build:
+      context: .
+      dockerfile: cmd/slack-service/Dockerfile
+
+  scoring-engine:
+    build:
+      context: .
+      dockerfile: cmd/scoring-engine/Dockerfile
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: cmd/notification-service/Dockerfile
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: burnout
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
